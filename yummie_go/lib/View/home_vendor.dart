@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yammiego/Model/vendor_order.dart';
 
 class VendorHomePage extends StatefulWidget {
   const VendorHomePage({super.key});
@@ -9,45 +8,28 @@ class VendorHomePage extends StatefulWidget {
 }
 
 class _VendorHomePageState extends State<VendorHomePage> {
-  late List<VendorOrder> orders;
-
-  @override
-  void initState() {
-    super.initState();
-    orders = [
-      VendorOrder(
-        orderId: 201,
-        customerName: "Amit",
-        amount: 450,
-        status: "Pending",
-        date: DateTime.now(),
-      ),
-      VendorOrder(
-        orderId: 202,
-        customerName: "Neha",
-        amount: 300,
-        status: "Delivered",
-        date: DateTime.now(),
-      ),
-    ];
-  }
+  /// 🔹 SIMPLE LOCAL DATA (NO MODEL, NO API)
+  List<Map<String, dynamic>> orders = [
+    {
+      "orderId": 201,
+      "customerName": "Amit",
+      "amount": 450.0,
+      "status": "Pending",
+      "date": DateTime.now(),
+    },
+    {
+      "orderId": 202,
+      "customerName": "Neha",
+      "amount": 300.0,
+      "status": "Delivered",
+      "date": DateTime.now(),
+    },
+  ];
 
   /// 🟢 ACTIONS
-  void acceptOrder(VendorOrder order) {
+  void updateStatus(int index, String newStatus) {
     setState(() {
-      order.status = "Processing";
-    });
-  }
-
-  void markReady(VendorOrder order) {
-    setState(() {
-      order.status = "Ready for Delivery";
-    });
-  }
-
-  void declineOrder(VendorOrder order) {
-    setState(() {
-      order.status = "Declined";
+      orders[index]["status"] = newStatus;
     });
   }
 
@@ -72,7 +54,7 @@ class _VendorHomePageState extends State<VendorHomePage> {
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-          /// HEADER
+          /// 🟢 HEADER
           Container(
             height: 180,
             width: double.infinity,
@@ -88,13 +70,14 @@ class _VendorHomePageState extends State<VendorHomePage> {
             ),
           ),
 
-          /// ORDERS
+          /// 🟢 ORDERS LIST
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: orders.length,
               itemBuilder: (context, index) {
                 final order = orders[index];
+                final status = order["status"];
 
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
@@ -107,27 +90,31 @@ class _VendorHomePageState extends State<VendorHomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          order.customerName,
+                          order["customerName"],
                           style: const TextStyle(
-                              fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
-                        Text("₹ ${order.amount}"),
+                        Text("₹ ${order["amount"]}"),
 
                         const SizedBox(height: 8),
 
-                        /// STATUS BUTTONS
-                        if (order.status == "Pending")
+                        /// 🔘 ACTION BUTTONS
+                        if (status == "Pending")
                           Row(
                             children: [
                               ElevatedButton(
-                                onPressed: () => acceptOrder(order),
+                                onPressed: () =>
+                                    updateStatus(index, "Processing"),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green),
                                 child: const Text("Accept"),
                               ),
                               const SizedBox(width: 8),
                               ElevatedButton(
-                                onPressed: () => declineOrder(order),
+                                onPressed: () =>
+                                    updateStatus(index, "Declined"),
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red),
                                 child: const Text("Decline"),
@@ -135,9 +122,10 @@ class _VendorHomePageState extends State<VendorHomePage> {
                             ],
                           ),
 
-                        if (order.status == "Processing")
+                        if (status == "Processing")
                           ElevatedButton(
-                            onPressed: () => markReady(order),
+                            onPressed: () => updateStatus(
+                                index, "Ready for Delivery"),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange),
                             child: const Text("Mark Ready"),
@@ -145,12 +133,12 @@ class _VendorHomePageState extends State<VendorHomePage> {
 
                         const SizedBox(height: 8),
 
-                        /// STATUS LABEL
+                        /// 🟢 STATUS TEXT
                         Text(
-                          order.status,
+                          status,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: statusColor(order.status),
+                            color: statusColor(status),
                           ),
                         ),
                       ],

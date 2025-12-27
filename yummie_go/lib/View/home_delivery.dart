@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:yammiego/Model/order.dart';
 import 'package:yammiego/View/pickup_details.dart';
 
 class DeliveryHomePage extends StatelessWidget {
@@ -7,32 +6,33 @@ class DeliveryHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Order> assignedOrders = [
-      Order(
-        orderId: 101,
-        customerName: "Rahul",
-        restaurantName: "Pizza Hut",
-        pickupAddress: "Pizza Hut, MG Road",
-        dropAddress: "Indiranagar, Bangalore",
-        amount: 350,
-        status: "Assigned",
-      ),
-      Order(
-        orderId: 102,
-        customerName: "Anjali",
-        restaurantName: "Burger King",
-        pickupAddress: "Burger King, Forum Mall",
-        dropAddress: "BTM Layout, Bangalore",
-        amount: 220,
-        status: "Assigned",
-      ),
+    /// 🔹 SIMPLE LOCAL DATA
+    List<Map<String, dynamic>> assignedOrders = [
+      {
+        "orderId": 101,
+        "customerName": "Rahul",
+        "restaurantName": "Pizza Hut",
+        "pickupAddress": "Pizza Hut, MG Road",
+        "dropAddress": "Indiranagar, Bangalore",
+        "amount": 350.0,
+        "status": "Assigned",
+      },
+      {
+        "orderId": 102,
+        "customerName": "Anjali",
+        "restaurantName": "Burger King",
+        "pickupAddress": "Burger King, Forum Mall",
+        "dropAddress": "BTM Layout, Bangalore",
+        "amount": 220.0,
+        "status": "Assigned",
+      },
     ];
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
-          /// ✅ Green Header
+          /// 🟢 HEADER
           Container(
             height: 180,
             width: double.infinity,
@@ -52,14 +52,14 @@ class DeliveryHomePage extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.refresh, color: Colors.white),
                   onPressed: () {
-                    // refresh orders (future use)
+                    // future refresh logic
                   },
                 ),
               ],
             ),
           ),
 
-          /// ✅ Orders List
+          /// 🟢 ORDERS LIST
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.only(top: 10),
@@ -68,8 +68,8 @@ class DeliveryHomePage extends StatelessWidget {
                 final order = assignedOrders[index];
 
                 return Card(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -78,27 +78,29 @@ class DeliveryHomePage extends StatelessWidget {
                     leading: CircleAvatar(
                       backgroundColor: Colors.green.shade100,
                       child: Text(
-                        order.orderId.toString(),
+                        order["orderId"].toString(),
                         style: const TextStyle(color: Colors.green),
                       ),
                     ),
                     title: Text(
-                      order.restaurantName,
+                      order["restaurantName"],
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text("Customer: ${order.customerName}"),
+                    subtitle: Text(
+                      "Customer: ${order["customerName"]}",
+                    ),
                     trailing: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "₹ ${order.amount}",
+                          "₹ ${order["amount"]}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          order.status,
+                          order["status"],
                           style: const TextStyle(
                             color: Colors.green,
                             fontSize: 12,
@@ -107,6 +109,7 @@ class DeliveryHomePage extends StatelessWidget {
                       ],
                     ),
                     onTap: () {
+                      /// 🔹 SIMPLE DETAILS PAGE
                       Navigator.push(
                         context,
                         MaterialPageRoute(
